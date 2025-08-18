@@ -87,7 +87,7 @@ menu.add_cascade(label='File', menu=filemenu)
 filemenu.add_command(label='New')
 filemenu.add_command(label='Open...')
 filemenu.add_separator()
-filemenu.add_command(label='Exit', command=root.quit)
+filemenu.add_command(label='Exit', command=root.destroy)
 helpmenu = Menu(menu)
 menu.add_cascade(label='Help', menu=helpmenu)
 helpmenu.add_command(label='About')
@@ -210,3 +210,9 @@ canvas_width=200
 y = int(canvas_height / 2)
 w.create_line(0, y, canvas_width, y )
 mainloop()
+""""""
+#
+from tkinter import *
+m1 = PanedWindow()
+m1.pack(fill=BOTH, expand=1)
+left = Entry(m1, bd=5)
