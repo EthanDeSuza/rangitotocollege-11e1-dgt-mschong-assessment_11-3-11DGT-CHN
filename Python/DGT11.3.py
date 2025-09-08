@@ -6,6 +6,8 @@ stuff for doing the tkinter assessment
 
 from tkinter import *
 from tkinter.ttk import Progressbar
+guess = ''
+correct_word = ''
 def wordle_start():  # Wordle game window
     root = Tk()
     title = 'Wordle'
@@ -36,14 +38,37 @@ def wordle_start():  # Wordle game window
     helpmenu.add_command(label='Game 1 Instructions')
     helpmenu.add_command(label='Game 2 Instructions')
     helpmenu.add_command(label='Game 3 Instructions')
+    def checkword():
+        for i in range(0,5):
+            if guess.get().lower() == correct_word and len(guess.get()) == 5:
+                result = Label(frame, text="You guessed the right word!")
+                result.grid(row=5, column=3)
+            elif len(guess.get()) != 5:
+                result = Label(frame, text="Your guess must be 5 letters")
+                result.grid(row=5, column=3)
+            else:
+                for i in range(0,5):
+                    if i == correct_word[i]:
+                        colour = Label(frame, text=guess.get()[i], bg='green', width=5, height=5)
+                        colour.grid(row=4, column=i)
+                result = Label(frame, text="That is not the correct word!")
+                result.grid(row=5, column=3)
 
     title_label = Label(frame, text=title, font=('Helvetica', 32))
     title_label.grid(row=0, column=0, columnspan=5)
     words = ['great', 'games', 'frame', 'comic', 'micro']
     correct_word = random.choice(words)
     label = Label(frame, text=correct_word)
-    label.grid(row=1, column=1, columnspan= 1)
-    # create the grid of boxes which will hold the letters
+    label.grid(row=1, column=2, columnspan= 1)
+    
+    Label(frame, text="Guess a word:").grid(row=2, column=2, columnspan=2, pady=(10, 0))
+    guess = Entry(frame)
+    submit = Button(frame, text="Guess", width=int(button_width/2), height=int(button_height/2), command=checkword)
+    guess.grid(row=1, column=4, columnspan=2, pady=(5, 25))
+    submit.grid(row=3, column=3)
+    
+# create the grid of boxes which will hold the letters
+    """
     letter1 = Frame(frame, width=40, height=40, bg='light grey')
     letter2 = Frame(frame, width=40, height=40, bg='light grey')
     letter3 = Frame(frame, width=40, height=40, bg='light grey')
@@ -53,9 +78,7 @@ def wordle_start():  # Wordle game window
     letter2.grid(row=2, column= 1, padx=5)
     letter3.grid(row=2, column= 2, padx=5)
     letter4.grid(row=2, column= 3, padx=5)
-    letter5.grid(row=2, column= 4, padx=5)
-
-
+    letter5.grid(row=2, column= 4, padx=5)"""
 def blackjack_start():  # BlackJack game window
     root = Tk()
     root.title('BlackJack')
@@ -106,9 +129,7 @@ def create_menu():
     title_label = Label(frame, text=title, font=('Helvetica', 32))
     title_label.grid(row=0, column=0, columnspan=3)
     # button for each of the game windows
-    global button_width, button_height
-    button_width = 20
-    button_height = 5
+
     buttonw = Button(frame, text='Wordle', width=button_width, height=button_height, command=wordle_start)
     buttonb = Button(frame, text='BlackJack', width=button_width, height=button_height, command=blackjack_start)
     buttons = Button(frame, text='Snake', width=button_width, height=button_height, command=snake_start)
@@ -143,6 +164,9 @@ def start_loading():
         root.resizable(False, False)
         Label(root, text="You must enter a name to begin!").grid(row=0, column=0, pady=20, padx=20)
 import random
+global button_width, button_height
+button_width = 20
+button_height = 5
 # begin loading screen window
 root = Tk()
 title = 'The Great Games Compendium'
@@ -168,6 +192,6 @@ Label(frame, text="Enter username:").grid(row=0, column=1, columnspan=2, pady=(5
 user = Entry(frame)
 user.grid(row=1, column=1, columnspan=2, pady=(5, 25))
 # button that checks for username and starts loading it if present
-start_button = Button(frame, text="Start game", command=start_loading)
+start_button = Button(frame, text="Start game", width = button_width, height = button_height, command=start_loading)
 start_button.grid(row=3, column=1, columnspan=2, pady=50)
 root.mainloop()
