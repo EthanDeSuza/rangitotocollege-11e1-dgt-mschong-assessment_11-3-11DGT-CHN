@@ -26,7 +26,12 @@ def wordle():  # Wordle game window
     # sets a word for wordle
     words = ['great', 'games', 'frame', 'comic', 'micro']
     correct_word = random.choice(words)
-
+    def reload_game():  # Restarts the game
+        root.destroy()
+        wordle()
+    def close_game():
+        root.destroy()
+        create_menu()
     # a navbar and help menu at the top of window
     menu = Menu(root)
     root.config(menu=menu)
@@ -36,6 +41,7 @@ def wordle():  # Wordle game window
     navmenu.add_command(label='Snake', command=snake_start)
     navmenu.add_command(label='Scoreboard', command=scoreboard_start)
     navmenu.add_separator()
+    navmenu.add_command(label='Exit to menu', command=close_game)
     navmenu.add_command(label='Exit', command=root.destroy)
     helpmenu = Menu(menu)
     menu.add_cascade(label='Help', menu=helpmenu)
@@ -43,12 +49,7 @@ def wordle():  # Wordle game window
     helpmenu.add_command(label='Game 2 Instructions')
     helpmenu.add_command(label='Game 3 Instructions')
     helpmenu.add_command(label=correct_word)
-    def reload_game():  # Restarts the game
-        root.destroy()
-        wordle()
-    def close_game():
-        root.destroy()
-        create_menu()
+    
     def checkword():  # checks the word and then tells player which letters are correct and which are not or in the wrong place
         global guesses  # Grabs the global guesses variable
         if guesses <= 5:  # limits the players guesses to 6
@@ -65,7 +66,7 @@ def wordle():  # Wordle game window
                 textguess.destroy()
                 # creates options to exit the game or replay it
                 retry = Button(interface_frame, text="Retry?", width=button_width, height=button_height, command=reload_game)
-                exit = Button(interface_frame, text="Exit?", width=button_width, height=button_height, command=close_game)
+                exit = Button(interface_frame, text="Exit to menu?", width=button_width, height=button_height, command=close_game)
                 retry.grid(row=guesses+6, column=1, columnspan=2)
                 exit.grid(row=guesses+6, column=4, columnspan=2)
                 # resets guesses variable
@@ -93,12 +94,12 @@ def wordle():  # Wordle game window
             submit.destroy()
             textguess.destroy()
             retry = Button(interface_frame, text="Retry?", width=button_width, height=button_height, command=reload_game)
-            exit = Button(interface_frame, text="Exit?", width=button_width, height=button_height, command=root.destroy)
+            exit = Button(interface_frame, text="Exit to menu?", width=button_width, height=button_height, command=root.destroy)
             retry.grid(row=guesses+6, column=1, columnspan=2)
             exit.grid(row=guesses+6, column=4, columnspan=2)
             guesses = 0
     for repeat in range(0, 5):
-        box = Label(interface_frame, text="I'm invisible", bg='light grey', fg='light grey', width=10, height=5)
+        box = Label(interface_frame, width=10, height=5)
         box.grid(row=4, column=repeat+1)
     # title for on the window
     title_label = Label(interface_frame, text=title, font=('Helvetica', 32))
@@ -107,8 +108,8 @@ def wordle():  # Wordle game window
     textguess = Label(interface_frame, text="Guess a word:")
     guess = Entry(interface_frame, width=9)
     submit = Button(interface_frame, text="Guess", width=9, height=int(button_height/2), command=checkword)
-    textguess.grid(row=2, column=1, columnspan=2, pady=(10, 0), padx=5)
-    guess.grid(row=2, column=3, columnspan=2, pady=(5, 25), padx=5)
+    textguess.grid(row=2, column=2, columnspan=2, pady=5, padx=5)
+    guess.grid(row=2, column=3, columnspan=2, padx=5)
     submit.grid(row=3, column=3)
         
 def blackjack_start():  # BlackJack game window
@@ -130,7 +131,7 @@ def scoreboard_start():  # Scoreboard window
 # This code creates a Tkinter window with a menu bar containing File and Help menus.
 def create_menu():
     def wordle_start():
-        root.destroy
+        root.destroy()
         wordle()
     root = Tk()
     root.title(title)
