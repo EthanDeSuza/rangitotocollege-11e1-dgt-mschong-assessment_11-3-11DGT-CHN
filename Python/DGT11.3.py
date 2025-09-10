@@ -6,7 +6,6 @@ stuff for doing the tkinter assessment
 
 from tkinter import *
 from tkinter.ttk import Progressbar
-
 def wordle():  # Wordle game window
     # begin the wordle game
     root = Tk()
@@ -33,7 +32,6 @@ def wordle():  # Wordle game window
     root.config(menu=menu)
     navmenu = Menu(menu)
     menu.add_cascade(label='Navigation', menu=navmenu)
-    navmenu.add_command(label='Wordle', command=wordle_start)
     navmenu.add_command(label='Blackjack', command=blackjack_start)
     navmenu.add_command(label='Snake', command=snake_start)
     navmenu.add_command(label='Scoreboard', command=scoreboard_start)
@@ -99,9 +97,9 @@ def wordle():  # Wordle game window
             retry.grid(row=guesses+6, column=1, columnspan=2)
             exit.grid(row=guesses+6, column=4, columnspan=2)
             guesses = 0
-    for i in range(0, 5):
-        box = Label(interface_frame, text="I'm invisible", bg='white', fg='white', width=10, height=5)
-        box.grid(row=4, column=1)
+    for repeat in range(0, 5):
+        box = Label(interface_frame, text="I'm invisible", bg='light grey', fg='light grey', width=10, height=5)
+        box.grid(row=4, column=repeat+1)
     # title for on the window
     title_label = Label(interface_frame, text=title, font=('Helvetica', 32))
     title_label.grid(row=0, column=1, columnspan=5)
@@ -112,19 +110,7 @@ def wordle():  # Wordle game window
     textguess.grid(row=2, column=1, columnspan=2, pady=(10, 0), padx=5)
     guess.grid(row=2, column=3, columnspan=2, pady=(5, 25), padx=5)
     submit.grid(row=3, column=3)
-    
-# create the grid of boxes which will hold the letters
-    """
-    letter1 = Frame(frame, width=40, height=40, bg='light grey')
-    letter2 = Frame(frame, width=40, height=40, bg='light grey')
-    letter3 = Frame(frame, width=40, height=40, bg='light grey')
-    letter4 = Frame(frame, width=40, height=40, bg='light grey')
-    letter5 = Frame(frame, width=40, height=40, bg='light grey')
-    letter1.grid(row=2, column= 0, padx=5)
-    letter2.grid(row=2, column= 1, padx=5)
-    letter3.grid(row=2, column= 2, padx=5)
-    letter4.grid(row=2, column= 3, padx=5)
-    letter5.grid(row=2, column= 4, padx=5)"""
+        
 def blackjack_start():  # BlackJack game window
     root = Tk()
     root.title('BlackJack')
