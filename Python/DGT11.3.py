@@ -35,7 +35,7 @@ def wordle():  # Wordle game window
     # a navbar and help menu at the top of window
     menu = Menu(root)
     root.config(menu=menu)
-    navmenu = Menu(menu)
+    navmenu = Menu(menu, tearoff=0)
     menu.add_cascade(label='Navigation', menu=navmenu)
     navmenu.add_command(label='Blackjack', command=blackjack_start)
     navmenu.add_command(label='Snake', command=snake_start)
@@ -43,12 +43,9 @@ def wordle():  # Wordle game window
     navmenu.add_separator()
     navmenu.add_command(label='Exit to menu', command=close_game)
     navmenu.add_command(label='Exit', command=root.destroy)
-    helpmenu = Menu(menu)
-    menu.add_cascade(label='Help', menu=helpmenu)
-    helpmenu.add_command(label='Game 1 Instructions')
-    helpmenu.add_command(label='Game 2 Instructions')
-    helpmenu.add_command(label='Game 3 Instructions')
-    helpmenu.add_command(label=correct_word)
+    helpmenu = Menu(menu, tearoff=0)
+    menu.add_cascade(label='Wordle Instructions', menu=helpmenu)
+    helpmenu.add_command(label='To play wordle you guess a five letter word')
     
     def checkword():  # checks the word and then tells player which letters are correct and which are not or in the wrong place
         global guesses  # Grabs the global guesses variable
@@ -150,7 +147,7 @@ def create_menu():
     # a navbar menu at the top of window
     menu = Menu(root)
     root.config(menu=menu)
-    navmenu = Menu(menu)
+    navmenu = Menu(menu, tearoff=0)
     menu.add_cascade(label='Navigation', menu=navmenu)
     navmenu.add_command(label='Wordle', command=wordle_start)
     navmenu.add_command(label='Blackjack', command=blackjack_start)
@@ -158,11 +155,6 @@ def create_menu():
     navmenu.add_command(label='Scoreboard', command=scoreboard_start)
     navmenu.add_separator()
     navmenu.add_command(label='Exit', command=root.destroy)
-    helpmenu = Menu(menu)
-    menu.add_cascade(label='Help', menu=helpmenu)
-    helpmenu.add_command(label='Game 1 Instructions')
-    helpmenu.add_command(label='Game 2 Instructions')
-    helpmenu.add_command(label='Game 3 Instructions')
 
     title_label = Label(frame, text=title, font=('Helvetica', 32, 'bold'))
     title_label.grid(row=0, column=0, columnspan=3)
