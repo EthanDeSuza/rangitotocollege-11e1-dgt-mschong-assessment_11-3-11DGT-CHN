@@ -189,51 +189,21 @@ def start_progress():
     else:
         root.destroy()
         create_menu()
-# check for name entered
-def start_loading():
-    global username
-    username = user.get()
-    if len(username) > 0:
-        start_progress()
-    else:
-        root = Tk()
-        root.title('Error')
-        root.geometry('250x100')
-        root.resizable(False, False)
-        Label(root, text="You must enter a name to begin!").grid(row=0, column=0, pady=20, padx=20)
-import random
-# Sets up some global variables for the wordle game
-guesses = 0
-guess = ''
-correct_word = ''
-# Sets up widths anf heights for some buttons
-button_width = 20
-button_height = 5
-# begin loading screen window
-root = Tk()
-title = 'The Great Games Compendium'
-root.title(title)
 
-#Specify window size
-width=800
-height=450
-root.geometry('{}x{}'.format(width, height))
+if load == False:
+# This code creates a Tkinter window with a progress bar that simulates loading up the games compendium.
+    import tkinter as tk
+    from tkinter import ttk
+    root = tk.Tk()
+    root.title('Games Compendium')
+    tk.Label(root, text="Loading...").pack(pady=20)
+    root.geometry('800x450')
+    root.resizable(False, False)
+    # Create a progressbar widget
+    pg = ttk.Progressbar(root, orient="horizontal", length=500, mode="determinate")
+    pg.pack(pady=20)
+    start_button = ttk.Button(root, text="Start Progress", command=start_progress)
+    start_button.pack()
+    root.mainloop()
 
-# create a quick frame
-frame = Frame(root)
-frame.pack(pady=20)
 
-#setup frame grid
-label = Label(frame, text=title, font=('Helvetica', 24))
-
-# Loading screen
-pg =  Progressbar(frame, orient="horizontal", length=500, mode="determinate")
-pg.grid(row=2, column=1, columnspan=2)
-# Enter in username
-Label(frame, text="Enter username:").grid(row=0, column=1, columnspan=2, pady=(50, 0))
-user = Entry(frame)
-user.grid(row=1, column=1, columnspan=2, pady=(5, 25))
-# button that checks for username and starts loading it if present
-start_button = Button(frame, text="Start game", width = button_width, height = button_height, command=start_loading)
-start_button.grid(row=3, column=1, columnspan=2, pady=50)
-root.mainloop()
