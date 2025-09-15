@@ -184,9 +184,9 @@ def create_menu():
     title_label.grid(row=0, column=0, columnspan=3)
     # button for each of the game windows
 
-    buttonw = Button(frame, text='Wordle', width=button_width, height=button_height, command=wordle_start)
-    buttonb = Button(frame, text='BlackJack', width=button_width, height=button_height, command=blackjack_start)
-    buttons = Button(frame, text='Snake', width=button_width, height=button_height, command=snake_start)
+    buttonw = Button(frame, text='Play Wordle', width=button_width, height=button_height, command=wordle_start)
+    buttonb = Button(frame, text='Play BlackJack', width=button_width, height=button_height, command=blackjack_start)
+    buttons = Button(frame, text='Play Snake', width=button_width, height=button_height, command=snake_start)
 
     buttonw.grid(row=1, column=0, pady=50, padx=(0,20))
     buttonb.grid(row=1, column=1, pady=50, padx=20)
