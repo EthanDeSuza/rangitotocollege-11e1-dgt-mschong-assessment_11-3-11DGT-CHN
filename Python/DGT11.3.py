@@ -12,6 +12,10 @@ stuff for doing the tkinter assessment.
 from tkinter import *
 from tkinter.ttk import Progressbar
 
+def wordle():  # Wordle game window
+    # begin the wordle game
+    wordle_win = Tk()
+
 
 def wordle():  # Wordle game window
     # begin the wordle game
@@ -34,6 +38,45 @@ def wordle():  # Wordle game window
     interface_frame = Frame(wordle_win)
     interface_frame.pack(pady=30)
     #setup frame grid
+    label = Label(interface_frame, text=title, font=('Helvetica', 24))
+    # sets a word for wordle
+    words = ['great', 'games', 'frame', 'comic', 'micro']
+    correct_word = random.choice(words)
+    def gamble_start():
+        wordle_win.destroy()
+        wordle()
+    def snake_start():
+        wordle_win.destroy()
+        snake()
+    def reload_game():  # Restarts the game
+        wordle_win.destroy()
+        wordle()
+    def close_game():
+        wordle_win.destroy()
+        create_menu()
+    def wordle_instruct():
+        wordle_structs = Tk()
+        wordle_structs.title('Wordle Instructions')
+        wordle_structs.resizable(False, False)
+        instruct = Label(wordle_structs, text="How to play", font=('Helvetica', 24, 'underline'))
+        instruct.grid(row=0, column=0)
+        wordle_struct = Label(wordle_structs, text='To play wordle you guess a five letter word,\n'
+                              'then when you press the guess button you will be show\n'
+                              'which of your letters are incorrect, in the wrong place\n'
+                              'or correct.', font=('Helvetica', 12))
+        wordle_struct.grid(row=1, column=0)
+    # a navbar and help menu at the top of window
+    menu = Menu(wordle_win)
+    wordle_win.config(menu=menu)
+    navmenu = Menu(menu, tearoff=0)
+    menu.add_cascade(label='Navigation', menu=navmenu)
+    navmenu.add_command(label='Blackjack', command=gamble_start)
+    navmenu.add_command(label='Snake', command=snake_start)
+    navmenu.add_command(label='Scoreboard', command=scoreboard_start)
+    navmenu.add_separator()
+    navmenu.add_command(label='Exit to menu', command=close_game)
+    navmenu.add_command(label='Exit', command=wordle_win.destroy)
+    helpmenu = Menu(menu, tearoff=0)
     label = Label(interface_frame, text=title, font=('Helvetica', 24))
     # sets a word for wordle
     words = ['great', 'games', 'frame', 'comic', 'micro']
@@ -117,8 +160,85 @@ def wordle():  # Wordle game window
             elif len(guess.get()) != 5:  # Check for correct length
                 result = Label(interface_frame, text="Your guess must be 5 letters")
                 result.grid(row=5, column=3, columnspan=5)
+    helpmenu.add_command(label='Wordle Instructions', command=wordle_instruct)
+   
+    def checkword():  # checks the word and then tells player which letters are correct and which are not or in the wrong place
+        global guesses  # Grabs the global guesses variable
+        if guesses <= 5:  # limits the players guesses to 6
+            if guess.get().lower() == correct_word:  # Checks if it's the correct word
+                for i in range(0,5):  # shows the player all the letter's are correct
+                    box = Label(interface_frame, text=guess.get().upper()[i], bg='green', fg='white', width=10, height=5)
+                    box.grid(row=guesses+4, column=i+1)
+                # tells the player it's the correct word
+                result = Label(interface_frame, text=f"You guessed the right word!\nIt took you {guesses+1} guesses.")
+                result.grid(row=guesses+5, column=1, columnspan=5)
+                # removes the capability of guessing more words
+                guess.destroy()
+                submit.destroy()
+                textguess.destroy()
+                # creates options to exit the game or replay it
+                retry = Button(interface_frame, text="Retry?", width=button_width, height=button_height, command=reload_game)
+                exit = Button(interface_frame, text="Exit to menu?", width=button_width, height=button_height, command=close_game)
+                retry.grid(row=guesses+6, column=1, columnspan=2)
+                exit.grid(row=guesses+6, column=4, columnspan=2)
+                global username
+                if guesses < wordle_top3['first'][0]:
+                    wordle_top3['third'][0] = wordle_top3['second'][0]
+                    wordle_top3['third'][1] = wordle_top3['second'][1]
+                    wordle_top3['second'][0] = wordle_top3['first'][0]
+                    wordle_top3['second'][1] = wordle_top3['first'][1]
+                    wordle_top3['first'][0] = guesses+1
+                    wordle_top3['first'][1] = username
+                elif guesses < wordle_top3['second'][0]:
+                    wordle_top3['third'][0] = wordle_top3['second'][0]
+                    wordle_top3['third'][1] = wordle_top3['second'][1]
+                    wordle_top3['second'][0] = guesses+1
+                    wordle_top3['second'][1] = username
+                elif guesses < wordle_top3['third'][0]:
+                    wordle_top3['third'][0] = guesses+1
+                    wordle_top3['third'][1] = username
+                # resets guesses variable
+                guesses = 0
+               
+            elif len(guess.get()) != 5:  # Check for correct length
+                result = Label(interface_frame, text="Your guess must be 5 letters")
+                result.grid(row=5, column=3, columnspan=5)
             else:
                 for i in range(0,5):
+                    if guess.get().lower()[i] == correct_word[i]:
+                        box = Label(interface_frame, text=guess.get().upper()[i], bg='green', fg='white', width=10, height=5)
+                        box.grid(row=guesses+4, column=i+1)
+                    elif guess.get().lower()[i] in correct_word:
+                        box = Label(interface_frame, text=guess.get().upper()[i], bg='orange', fg='white', width=10, height=5)
+                        box.grid(row=guesses+4, column=i+1)
+                    else:
+                        box = Label(interface_frame, text=guess.get().upper()[i], bg='grey', fg='white', width=10, height=5)
+                        box.grid(row=guesses+4, column=i+1)
+                guesses += 1
+        if guesses > 5:
+            result = Label(interface_frame, text="Out of guesses, the word was: "+correct_word)
+            result.grid(row=guesses+5, column=1, columnspan=5)
+            guess.destroy()
+            submit.destroy()
+            textguess.destroy()
+            retry = Button(interface_frame, text="Retry?", width=button_width, height=button_height, command=reload_game)
+            exit = Button(interface_frame, text="Exit to menu?", width=button_width, height=button_height, command=close_game)
+            retry.grid(row=guesses+6, column=1, columnspan=2)
+            exit.grid(row=guesses+6, column=4, columnspan=2)
+            guesses = 0
+    # creates a correct alignment for the whole game
+    for repeat in range(0, 5):
+        box = Label(interface_frame, width=10, height=5)
+        box.grid(row=4, column=repeat+1)
+    # title for on the window
+    title_label = Label(interface_frame, text=title, font=('Helvetica', 32))
+    title_label.grid(row=0, column=1, columnspan=5)
+    # the guessing word entry and button
+    textguess = Label(interface_frame, text="Guess a word:")
+    guess = Entry(interface_frame, width=9)
+    submit = Button(interface_frame, text="Guess", width=9, height=int(button_height/2), command=checkword)
+    textguess.grid(row=2, column=2, columnspan=2, pady=5, padx=5)
+    guess.grid(row=2, column=3, columnspan=2, padx=5)
                     if guess.get().lower()[i] == correct_word[i]:
                         box = Label(interface_frame, text=guess.get().upper()[i], bg='green', fg='white', width=10, height=5)
                         box.grid(row=guesses+4, column=i+1)
@@ -386,9 +506,11 @@ def snake():  # Snake game window
     root = Tk()
     root.title('Snake')
     root.geometry('600x600')
+    root.geometry('600x600')
     root.resizable(False, False)
 def scoreboard_start():  # Scoreboard window
     root = Tk()
+    root.title('Leaderboard')
     root.title('Leaderboard')
     root.geometry('600x500')
     root.resizable(False, False)
@@ -465,6 +587,7 @@ def create_menu():
     width=800
     height=450
     menu_win.geometry('{}x{}'.format(width, height))
+    menu_win.geometry('{}x{}'.format(width, height))
     # create a quick frame
     menu_frame = Frame(menu_win)
     menu_frame.pack(pady=20)
@@ -473,6 +596,7 @@ def create_menu():
 
 
     #setup frame grid
+    frame_grid = Label(menu_frame, text=title, font=('Helvetica', 24))
     frame_grid = Label(menu_frame, text=title, font=('Helvetica', 24))
     # a navbar menu at the top of window
     menu = Menu(menu_win)
@@ -542,6 +666,14 @@ def start_loading():
         root.resizable(False, False)
         Label(root, text="You must enter a name to begin!").grid(row=0, column=0, pady=20, padx=20)
 import random
+# Sets up some global variables for the wordle game
+guesses = 0
+guess = ''
+correct_word = ''
+wordle_top3 = {'first':[7, 'Computer'], 'second':[7, 'Computer'], 'third':[7, 'Computer']}
+blackjack_top3 = {'first':[0, 'Computer'], 'second':[0, 'Computer'], 'third':[0, 'Computer']}
+snake_top3 = {'first':[0, 'Computer'], 'second':[0, 'Computer'], 'third':[0, 'Computer']}
+# Sets up widths anf heights for some buttons
 # Sets up some global variables for the wordle game
 guesses = 0
 guess = ''
