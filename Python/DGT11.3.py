@@ -556,18 +556,26 @@ def clicker():  # clicker game window
     label = Label(interface_frame, text=title, font=('Helvetica', 24))
 
     def wordle_start():
+        global end
+        end = True
         clicker_win.destroy()
         wordle()
 
     def gamble_start():
+        global end
+        end = True
         clicker_win.destroy()
         blackjack()
 
     def reload_game():  # Restarts the game
+        global end
+        end = True
         clicker_win.destroy()
         clicker()
 
     def close_game():
+        global end
+        end = True
         clicker_win.destroy()
         create_menu()
     def clicker_struct():
@@ -591,10 +599,18 @@ def clicker():  # clicker game window
     menu.add_cascade(label='Help', menu=helpmenu)
     helpmenu.add_command(label='Clicker Instructions',
                          command=clicker_struct)
-    global geo, mult, bank, miners
+    global geo, mult, bank, miners, mult_cost, miner_cost, pick_cost, pick, end, lifeblood, lifeblood_cost, counter
+    end = False
     geo = 0
     mult = 1
     miners = 0
+    mult_cost = 10
+    miner_cost = 50
+    pick_cost = 100
+    pick = 1
+    lifeblood = 1000
+    lifeblood_cost = 1000
+    counter = 0
     bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
     bank.grid(row=2, column=2)
     def mine():
@@ -604,9 +620,7 @@ def clicker():  # clicker game window
         bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
         bank.grid(row=2, column=2)
     def upgrade_win():
-        global geo, mult, mult_cost, upgrader, mult_upgrade, miner_cost, miner_upgrade
-        mult_cost = 50
-        miner_cost = 100
+        global geo, mult, upgrader, mult_upgrade, miner_hire, pick_cost, pick_enhance, lifeblood_enhance, lifeblood_cost
         upgrader = Tk()
         upgrader.title('Upgrades')
         upgrader.geometry('400x600')
@@ -615,11 +629,15 @@ def clicker():  # clicker game window
         titles.grid(row=0, column=0, columnspan=3, padx=130)
         mult_upgrade = Button(upgrader, text=f'Increase Geo per click by 1\nCost: {mult_cost} Geo', command=mult_upgradefunct)
         mult_upgrade.grid(row=1, column=0)
-        miner_upgrade = Button(upgrader, text=f'Hire a husk miner\nCost: {miner_cost} Geo', command=miner_upgradefunct)
-        miner_upgrade.grid(row=1, column=2)
-    
-    def miner_upgradefunct():
-        global geo, bank, miner_cost, miner_upgrade, upgrader, miners
+        miner_hire = Button(upgrader, text=f'Hire a husk miner\nCost: {miner_cost} Geo', command=miner_purchase)
+        miner_hire.grid(row=1, column=2)
+        pick_enhance = Button(upgrader, text=f"Upgrade the husk miner's pickaxe\nCost: {pick_cost} Geo", command=pick_upgrade)
+        pick_enhance.grid(row=3, column=0)
+        lifeblood_enhance = Button(upgrader, text=f"Buy lifeblood for the husk miner\nCost: {lifeblood_cost} Geo", command=lifeblood_upgrade)
+        lifeblood_enhance.grid(row=3, column=2)
+
+    def miner_purchase():
+        global geo, bank, miner_cost, miner_hire, upgrader, miners
         if geo >= miner_cost:
             geo -= miner_cost
             miners += 1
@@ -627,12 +645,42 @@ def clicker():  # clicker game window
             bank.destroy()
             bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
             bank.grid(row=2, column=2)
-            miner_upgrade.destroy()
-            miner_upgrade = Button(upgrader, text=f'Hire a husk miner\nCost: {miner_cost} Geo', command=miner_upgradefunct)
-            miner_upgrade.grid(row=1, column=0)
-            mine_auto()
-
+            miner_hire.destroy()
+            miner_hire = Button(upgrader, text=f'Hire a husk miner\nCost: {miner_cost} Geo', command=miner_purchase)
+            miner_hire.grid(row=1, column=2)
+            amount = Label(upgrader, text=f'You have purchased this {miners} times.')
+            amount.grid(row=2, column=2)
     
+    def lifeblood_upgrade():
+        global geo, bank, lifeblood_cost, upgrader, lifeblood, lifeblood_enhance, counter
+        if geo >= lifeblood_cost:
+            geo -= lifeblood_cost
+            lifeblood *= 0.9
+            counter += 1
+            lifeblood_cost = int(lifeblood_cost * 2.5)
+            bank.destroy()
+            bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
+            bank.grid(row=2, column=2)
+            lifeblood_enhance.destroy()
+            lifeblood_enhance = Button(upgrader, text=f'Hire a husk miner\nCost: {lifeblood_cost} Geo', command=lifeblood_upgrade)
+            lifeblood_enhance.grid(row=3, column=2)
+            amount = Label(upgrader, text=f'You have purchased this {counter} times.')
+            amount.grid(row=4, column=2)
+
+    def pick_upgrade():
+        global geo, bank, pick_cost, upgrader, pick, pick_enhance
+        if geo >= pick_cost:
+            geo -= pick_cost
+            pick += 1
+            pick_cost = int(pick_cost * 3.5)
+            bank.destroy()
+            bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
+            bank.grid(row=2, column=2)
+            pick_enhance.destroy()
+            pick_enhance = Button(upgrader, text=f"Upgrade the husk miner's pickaxe\nCost: {pick_cost} Geo", command=pick_upgrade)
+            pick_enhance.grid(row=3, column=0)
+            amount = Label(upgrader, text=f'You have purchased this {pick-1} times.')
+            amount.grid(row=4, column=0)
     def mult_upgradefunct():
         global geo, mult, mult_cost, bank, mult_upgrade, upgrader
         if geo >= mult_cost:
@@ -644,7 +692,9 @@ def clicker():  # clicker game window
             bank.grid(row=2, column=2)
             mult_upgrade.destroy()
             mult_upgrade = Button(upgrader, text=f'Increase Geo per click by 1\nCost: {mult_cost} Geo', command=mult_upgradefunct)
-            mult_upgrade.grid(row=1, column=1)
+            mult_upgrade.grid(row=1, column=0)
+            amount = Label(upgrader, text=f'You have purchased this {mult-1} times')
+            amount.grid(row=2, column=0)
     geoclicker = Label(interface_frame, text='GeoClicker', bg='light grey', font=('Helvetica', 32))
     geoclicker.grid(row=0, column=0, columnspan=5)
     mine_geo = Button(interface_frame, text='Mine Geo', width=10, height=5, font=('Helvetica', 12), command=mine)
@@ -654,13 +704,16 @@ def clicker():  # clicker game window
     rebirth = Button(interface_frame, text='Rebirth', width=20, height=2)
     rebirth.grid(row=6, column=3)
     def mine_auto():
-        global miners, geo, bank
-        geo += miners
+        global miners, geo, bank, pick, end, lifeblood
+        if end == True:
+            return
+        geo += miners * pick
         bank.destroy()
         bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
         bank.grid(row=2, column=2)
-        clicker_win.after(1000, mine_auto)
+        clicker_win.after(int(lifeblood), mine_auto)
         
+    mine_auto()
     clicker_win.mainloop()
 
 
