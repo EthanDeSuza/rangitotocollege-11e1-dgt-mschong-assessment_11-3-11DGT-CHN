@@ -53,7 +53,7 @@ def wordle():  # Wordle game window
         instruct = Label(wordle_structs, text="How to play",
                          font=('Helvetica', 24, 'underline'))
         instruct.grid(row=0, column=0)
-        wordle_struct = Label(wordle_structs, text='To play wordle you'
+        wordle_struct = Label(wordle_structs, text='To play wordle you '
                               'guess a five letter word,\nthen when you '
                               'press the guess button you will be show\n'
                               'which of your letters are incorrect, '
@@ -66,7 +66,7 @@ def wordle():  # Wordle game window
     navmenu = Menu(menu, tearoff=0)
     menu.add_cascade(label='Navigation', menu=navmenu)
     navmenu.add_command(label='Blackjack', command=gamble_start)
-    navmenu.add_command(label='clicker', command=clicker_start)
+    navmenu.add_command(label='Geoclicker', command=clicker_start)
     navmenu.add_command(label='Scoreboard', command=scoreboard_start)
     navmenu.add_separator()
     navmenu.add_command(label='Exit to menu', command=close_game)
@@ -201,13 +201,13 @@ def blackjack():
     gamble_win = Tk()
     title = 'BlackJack'
     gamble_win.title(title)
-    gamble_win.configure(bg='green')
+    gamble_win.configure(bg='#326E32')
     # Specify window size
     width = 1200
     height = 900
     gamble_win.geometry('{}x{}'.format(width, height))
     # create a frame
-    interface_frame = Frame(gamble_win, bg='green')
+    interface_frame = Frame(gamble_win, bg='#326E32')
     interface_frame.pack(pady=30)
     # setup frame grid
     label = Label(interface_frame, text=title, font=('Helvetica', 24))
@@ -232,6 +232,8 @@ def blackjack():
         gamble_structs = Tk()
         gamble_structs.title('BlackJack Instructions')
         gamble_structs.resizable(False, False)
+        gamble_struct = Label(gamble_structs, text='How to play', font=('Helvetica', 24, 'underline'))
+        gamble_struct.grid(row=0, column=0)
         gamble_struct = Label(gamble_structs, text='You have to choose an '
                               'amount of tiddlywinks to put into the pot,\n'
                               'then you are given your cards and you have '
@@ -253,7 +255,7 @@ def blackjack():
     navmenu = Menu(menu, tearoff=0)
     menu.add_cascade(label='Navigation', menu=navmenu)
     navmenu.add_command(label='Wordle', command=wordle_start)
-    navmenu.add_command(label='clicker', command=clicker_start)
+    navmenu.add_command(label='Geoclicker', command=clicker_start)
     navmenu.add_command(label='Scoreboard', command=scoreboard_start)
     navmenu.add_separator()
     navmenu.add_command(label='Exit to menu', command=close_game)
@@ -285,11 +287,11 @@ def blackjack():
             theirs.destroy()
             for i in range(0, dnew):
                 cover = Label(interface_frame, width=17,
-                              height=10, background='green')
+                              height=10, background='#326E32')
                 cover.grid(row=3, column=i+2)
             for i in range(0, pnew):
                 cover = Label(interface_frame, width=17, height=10,
-                              background='green')
+                              background='#326E32')
                 cover.grid(row=5, column=i+2)
             yours.destroy()
             bettingtime()
@@ -300,7 +302,7 @@ def blackjack():
         hit.destroy()
         stand.destroy()
         if total > dtotal and total < 22 or dtotal > 21 and total < 22:
-            winner = Label(interface_frame, text='You win!', bg='green', font=('helvetica', 20))
+            winner = Label(interface_frame, text='You win!', bg='#326E32', font=('helvetica', 20))
             winner.grid(row=10, column=0, columnspan=5)
             td += gamble * 2
             continues = Button(interface_frame, width=10, height=4,
@@ -310,7 +312,7 @@ def blackjack():
                                 text='Exit to menu?', command=close_game)
             returnmenu.grid(row=4, column=1, pady=5)
         elif dtotal == total or dtotal > 21 and total > 21:
-            winner = Label(interface_frame, text="It's a tie!", bg='green', font=('helvetica', 20))
+            winner = Label(interface_frame, text="It's a tie!", bg='#326E32', font=('helvetica', 20))
             winner.grid(row=10, column=0, columnspan=5)
             td += gamble
             continues = Button(interface_frame, width=10, height=4,
@@ -320,7 +322,7 @@ def blackjack():
                                 text='Exit to menu?', command=close_game)
             returnmenu.grid(row=4, column=1, pady=5)
         elif dtotal > total and dtotal < 22 or total > 21 and dtotal < 22:
-            winner = Label(interface_frame, text='Dealer wins :(', bg='green', font=('helvetica', 20))
+            winner = Label(interface_frame, text='Dealer wins :(', bg='#326E32', font=('helvetica', 20))
             winner.grid(row=10, column=0, columnspan=5)
             continues = Button(interface_frame, width=10, height=4,
                                text='Continue?', command=beginbet)
@@ -347,12 +349,12 @@ def blackjack():
                     blackjack_top3['third'][1] = username
         else:
             print('How did we get here')
-        balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='green')
+        balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='#326E32')
         balance.grid(row=0, column=4)
     for repeat in range(0, 5):
-        box = Label(interface_frame, width=17, height=7, bg='green')
+        box = Label(interface_frame, width=17, height=7, bg='#326E32')
         box.grid(row=5, column=repeat)
-    gametitle = Label(interface_frame, text='BlackJack', bg='green',
+    gametitle = Label(interface_frame, text='BlackJack', bg='#326E32',
                       font=('helvetica', 25))
     gametitle.grid(row=0, column=2)
     global td, pnew, dnew, balance
@@ -361,42 +363,86 @@ def blackjack():
     def ten():
         global td, gamble, balance, td_save
         gamble = 10
-        td_save = td
-        td -= gamble
-        balance.destroy()
-        balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='green')
-        balance.grid(row=0, column=4)
-        drawcards()
+        if gamble > td:
+            error = Tk()
+            error.title('Error')
+            error.geometry('300x100')
+            error.resizable(False, False)
+            errortext = Label(error, text='You do not have enough '
+                              'tiddlywinks to make that bet.')
+            errortext.pack()
+            ok = Button(error, text='OK', command=error.destroy)
+            ok.pack()
+        else:
+            td_save = td
+            td -= gamble
+            balance.destroy()
+            balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='#326E32')
+            balance.grid(row=0, column=4)
+            drawcards()
 
     def fifty():
         global td, gamble, balance, td_save
         gamble = 50
-        td_save = td
-        td -= gamble
-        balance.destroy()
-        balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='green')
-        balance.grid(row=0, column=4)
-        drawcards()
+        if gamble > td:
+            error = Tk()
+            error.title('Error')
+            error.geometry('300x100')
+            error.resizable(False, False)
+            errortext = Label(error, text='You do not have enough '
+                              'tiddlywinks to make that bet.')
+            errortext.pack()
+            ok = Button(error, text='OK', command=error.destroy)
+            ok.pack()
+        else:
+            td_save = td
+            td -= gamble
+            balance.destroy()
+            balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='#326E32')
+            balance.grid(row=0, column=4)
+            drawcards()
 
     def hundy():
         global td, gamble, balance, td_save
         gamble = 100
-        td_save = td
-        td -= gamble
-        balance.destroy()
-        balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='green')
-        balance.grid(row=0, column=4)
-        drawcards()
+        if gamble > td:
+            error = Tk()
+            error.title('Error')
+            error.geometry('300x100')
+            error.resizable(False, False)
+            errortext = Label(error, text='You do not have enough '
+                              'tiddlywinks to make that bet.')
+            errortext.pack()
+            ok = Button(error, text='OK', command=error.destroy)
+            ok.pack()
+        else:
+            td_save = td
+            td -= gamble
+            balance.destroy()
+            balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='#326E32')
+            balance.grid(row=0, column=4)
+            drawcards()
 
     def half():
         global td, gamble, balance, td_save
         gamble = td//2
-        td_save = td
-        td -= gamble
-        balance.destroy()
-        balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='green')
-        balance.grid(row=0, column=4)
-        drawcards()
+        if gamble > td:
+            error = Tk()
+            error.title('Error')
+            error.geometry('300x100')
+            error.resizable(False, False)
+            errortext = Label(error, text='You do not have enough '
+                              'tiddlywinks to make that bet.')
+            errortext.pack()
+            ok = Button(error, text='OK', command=error.destroy)
+            ok.pack()
+        else:
+            td_save = td
+            td -= gamble
+            balance.destroy()
+            balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='#326E32')
+            balance.grid(row=0, column=4)
+            drawcards()
 
     def all():
         global td, gamble, balance, td_save
@@ -404,14 +450,14 @@ def blackjack():
         gamble = td
         td -= gamble
         balance.destroy()
-        balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='green')
+        balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='#326E32')
         balance.grid(row=0, column=4)
         drawcards()
 
     def bettingtime():
         begin.destroy()
         global bet10, bet50, bet100, bethalf, betall, howmuch, balance
-        howmuch = Label(interface_frame, bg='green',
+        howmuch = Label(interface_frame, bg='#326E32',
                         text='How much would you like to bet?')
         howmuch.grid(row=2, column=0, columnspan=5)
         bet10 = Button(interface_frame, width=10, height=5, text='10 TD',
@@ -432,7 +478,7 @@ def blackjack():
     begin = Button(interface_frame, width=20, height=5, text='Begin Game',
                    command=bettingtime)
     begin.grid(row=3, column=2)
-    balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='green')
+    balance = Label(interface_frame, text=f'Tiddlywinks: {td}', bg='#326E32')
     balance.grid(row=0, column=4)
     cards = [13, 13, 13, 13, 12, 12, 12, 12, 11, 11, 11, 11, 10, 10, 10, 10,
              9, 9, 9, 9, 8, 8, 8, 8, 7, 7, 7, 7, 6, 6, 6, 6, 5, 5, 5, 5, 4,
@@ -450,7 +496,7 @@ def blackjack():
         yours.destroy()
         total += newcard
         yours = Label(interface_frame, text=f'Your cards:\ntotal: {total}',
-                      bg='green')
+                      bg='#326E32')
         yours.grid(row=4, column=2)
         cardnum += 1
         pnew += 1
@@ -477,7 +523,7 @@ def blackjack():
                 cardnum += 1
                 dtotal += newcard
                 theirs.destroy()
-                theirs = Label(interface_frame,  bg='green',
+                theirs = Label(interface_frame,  bg='#326E32',
                                text=f'Dealers cards:\ntotal: {dtotal}')
                 theirs.grid(row=2, column=2)
             else:
@@ -533,13 +579,13 @@ def blackjack():
             dcard2 = random.choice(cards)
         cards.remove(dcard2)
         cardshow2 = Label(interface_frame, width=17, height=10,
-                          background='dark green')
+                          background="#1F421F")
         cardshow2.grid(row=3, column=1)
         total = pcard1+pcard2
-        yours = Label(interface_frame, bg='green',
+        yours = Label(interface_frame, bg='#326E32',
                       text=f'Your cards:\ntotal: {total}')
         yours.grid(row=4, column=2)
-        theirs = Label(interface_frame, bg='green',
+        theirs = Label(interface_frame, bg='#326E32',
                        text=f'Dealers cards:\ntotal: {dcard1}')
         theirs.grid(row=2, column=2)
     gamble_win.mainloop()
@@ -555,32 +601,68 @@ def clicker():  # clicker game window
     # create a frame
     interface_frame = Frame(clicker_win, bg='light grey')
     interface_frame.pack(padx=50, pady=50)
-    # setup frame grid
-    label = Label(interface_frame, text=title, font=('Helvetica', 24))
 
-    def wordle_start():
-        global end
+
+    def scores():  # Saves the score to the leaderboard
+        global geo, username
+        if geo > clicker_top3['first'][0]:
+            clicker_top3['third'][0] = clicker_top3['second'][0]
+            clicker_top3['third'][1] = clicker_top3['second'][1]
+            clicker_top3['second'][0] = clicker_top3['first'][0]
+            clicker_top3['second'][1] = clicker_top3['first'][1]
+            clicker_top3['first'][0] = geo
+            clicker_top3['first'][1] = username
+        elif geo > clicker_top3['second'][0]:
+            clicker_top3['third'][0] = clicker_top3['second'][0]
+            clicker_top3['third'][1] = clicker_top3['second'][1]
+            clicker_top3['second'][0] = geo
+            clicker_top3['second'][1] = username
+        elif geo > clicker_top3['third'][0]:
+            clicker_top3['third'][0] = geo
+            clicker_top3['third'][1] = username
+    
+    def wordle_start():  # Starts the wordle game
+        scores()
+        global end, upgrader
         end = True
+        upgrader.destroy()
         clicker_win.destroy()
         wordle()
 
-    def gamble_start():
-        global end
+    def gamble_start():  # Starts the blackjack game
+        scores()
+        global end, upgrader
         end = True
+        upgrader.destroy()
         clicker_win.destroy()
         blackjack()
 
-    def close_game():
-        global end
+    def close_game():  # Exits to the main menu
+        scores()
+        global end, upgrader
         end = True
+        upgrader.destroy()
         clicker_win.destroy()
         create_menu()
 
-    def clicker_struct():
+    def end_game():  # Exits the program
+        global end, upgrader
+        end = True
+        upgrader.destroy()
+        clicker_win.destroy()
+
+    def clicker_struct():  # Opens the instructions window
         clicker_structs = Tk()
         clicker_structs.title('Clicker Instructions')
         clicker_structs.resizable(False, False)
-        clicker_struct = Label(clicker_structs, text='', font=('Helvetica', 12))
+        clicker_struct = Label(clicker_structs, text='How to play', font=('Helvetica', 24, 'underline'))
+        clicker_struct.grid(row=0, column=0)
+        clicker_struct = Label(clicker_structs,
+                               text='You click the mine button to gain geo,'
+                               '\nyou can buy upgrades with geo that can\n'
+                               'upgrade your geo per click add autoclickers,\n' 
+                               'upgrade their speed and amount per click.',
+                               font=('Helvetica', 12))
         clicker_struct.grid(row=1, column=0)
     # a navbar and help menu at the top of window
     menu = Menu(clicker_win)
@@ -588,15 +670,16 @@ def clicker():  # clicker game window
     navmenu = Menu(menu, tearoff=0)
     menu.add_cascade(label='Navigation', menu=navmenu)
     navmenu.add_command(label='Wordle', command=wordle_start)
-    navmenu.add_command(label='clicker', command=gamble_start)
+    navmenu.add_command(label='Blackjack', command=gamble_start)
     navmenu.add_command(label='Scoreboard', command=scoreboard_start)
     navmenu.add_separator()
     navmenu.add_command(label='Exit to menu', command=close_game)
-    navmenu.add_command(label='Exit', command=clicker_win.destroy)
+    navmenu.add_command(label='Exit', command=end_game)
     helpmenu = Menu(menu, tearoff=0)
     menu.add_cascade(label='Help', menu=helpmenu)
     helpmenu.add_command(label='Clicker Instructions',
                          command=clicker_struct)
+    # sets up all the variables needed for the game
     global geo, mult, bank, miners, mult_cost, miner_cost, pick_cost, pick, end, lifeblood, lifeblood_cost, counter, upgrader
     end = False
     geo = 0
@@ -610,14 +693,15 @@ def clicker():  # clicker game window
     lifeblood_cost = 1000
     counter = 0
     
-    def mine():
+    def mine():  # Adds geo when the button is pressed
         global geo, mult, bank
         geo += mult
         bank.destroy()
         bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
         bank.grid(row=2, column=2)
-    def upgrade_win():
-        global geo, mult, upgrader, mult_upgrade, miner_hire, pick_cost, pick_enhance, lifeblood_enhance, lifeblood_cost
+
+    def upgrade_win():  # Opens the upgrade window when the button is pressed and destroys the old one
+        global geo, mult, upgrader, mult_upgrade, miner_hire, pick_cost, pick_enhance, lifeblood_enhance, lifeblood_cost, upgrader
         upgrader.destroy()
         upgrader = Tk()
         upgrader.title('Upgrades')
@@ -643,7 +727,7 @@ def clicker():  # clicker game window
         amount = Label(upgrader, text=f'You have purchased this {counter} times.', bg='dark grey')
         amount.grid(row=4, column=2)
 
-    def miner_purchase():
+    def miner_purchase():  # Adds an autoclicker if you have enough geo
         global geo, bank, miner_cost, miner_hire, upgrader, miners
         if geo >= miner_cost:
             geo -= miner_cost
@@ -652,13 +736,12 @@ def clicker():  # clicker game window
             bank.destroy()
             bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
             bank.grid(row=2, column=2)
-            miner_hire.destroy()
             miner_hire = Button(upgrader, text=f'Hire a husk miner\nCost: {miner_cost} Geo', command=miner_purchase)
             miner_hire.grid(row=1, column=2, pady=10)
-            amount = Label(upgrader, text=f'You have purchased this {miners} times.')
+            amount = Label(upgrader, text=f'You have purchased this {miners} times.', bg='dark grey')
             amount.grid(row=2, column=2)
     
-    def lifeblood_upgrade():
+    def lifeblood_upgrade():  # Speeds up the autoclicker if you have enough geo
         global geo, bank, lifeblood_cost, upgrader, lifeblood, lifeblood_enhance, counter
         if geo >= lifeblood_cost:
             geo -= lifeblood_cost
@@ -668,13 +751,12 @@ def clicker():  # clicker game window
             bank.destroy()
             bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
             bank.grid(row=2, column=2)
-            lifeblood_enhance.destroy()
             lifeblood_enhance = Button(upgrader, text=f"Buy lifeblood for the husk miner\nCost: {lifeblood_cost} Geo", command=lifeblood_upgrade)
             lifeblood_enhance.grid(row=3, column=2, pady=10)
-            amount = Label(upgrader, text=f'You have purchased this {counter} times.')
+            amount = Label(upgrader, text=f'You have purchased this {counter} times.', bg='dark grey')
             amount.grid(row=4, column=2)
 
-    def pick_upgrade():
+    def pick_upgrade():  # Iincreases the geo per click of the autoclicker if you have enough geo
         global geo, bank, pick_cost, upgrader, pick, pick_enhance
         if geo >= pick_cost:
             geo -= pick_cost
@@ -683,13 +765,12 @@ def clicker():  # clicker game window
             bank.destroy()
             bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
             bank.grid(row=2, column=2)
-            pick_enhance.destroy()
             pick_enhance = Button(upgrader, text=f"Upgrade the husk miner's pickaxe\nCost: {pick_cost} Geo", command=pick_upgrade)
             pick_enhance.grid(row=3, column=0, pady=10)
-            amount = Label(upgrader, text=f'You have purchased this {pick-1} times.')
+            amount = Label(upgrader, text=f'You have purchased this {pick-1} times.', bg='dark grey')
             amount.grid(row=4, column=0)
 
-    def mult_upgradefunct():
+    def mult_upgradefunct():  # Increases the geo per click if you have enough geo
         global geo, mult, mult_cost, bank, mult_upgrade, upgrader
         if geo >= mult_cost:
             geo -= mult_cost
@@ -698,11 +779,11 @@ def clicker():  # clicker game window
             bank.destroy()
             bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
             bank.grid(row=2, column=2)
-            mult_upgrade.destroy()
             mult_upgrade = Button(upgrader, text=f'Increase Geo per click by 1\nCost: {mult_cost} Geo', command=mult_upgradefunct)
             mult_upgrade.grid(row=1, column=0, pady=10)
-            amount = Label(upgrader, text=f'You have purchased this {mult-1} times')
+            amount = Label(upgrader, text=f'You have purchased this {mult-1} times', bg='dark grey')
             amount.grid(row=2, column=0)
+    # Opens and sets up game and upgrade window
     geoclicker = Label(interface_frame, text='GeoClicker', bg='light grey', font=('Helvetica', 32))
     geoclicker.grid(row=0, column=0, columnspan=5, padx=50, pady=10)
     mine_geo = Button(interface_frame, text='Mine Geo', width=10, height=5, font=('Helvetica', 12), command=mine)
@@ -734,7 +815,8 @@ def clicker():  # clicker game window
     amount.grid(row=4, column=2)
     bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
     bank.grid(row=2, column=2)
-    def mine_auto():
+
+    def mine_auto():  # Starts the autoclicker working
         global miners, geo, bank, pick, end, lifeblood
         if end == True:
             return
@@ -753,6 +835,7 @@ def scoreboard_start():  # Scoreboard window
     root = Tk()
     root.title('Leaderboard')
     root.geometry('600x500')
+    root.configure(bg='dark grey')
     root.resizable(False, False)
     title = Label(root, text='The leaderboard', font=('Helvetica', 32, 'bold'), bg='dark grey')
     title.grid(row=0, column=0, columnspan=5, padx=(125))
@@ -838,7 +921,7 @@ def create_menu():
     menu.add_cascade(label='Navigation', menu=navmenu)
     navmenu.add_command(label='Wordle', command=wordle_start)
     navmenu.add_command(label='Blackjack', command=gamble_start)
-    navmenu.add_command(label='clicker', command=clicker_start)
+    navmenu.add_command(label='Geoclicker', command=clicker_start)
     navmenu.add_command(label='Scoreboard', command=scoreboard_start)
     navmenu.add_separator()
     navmenu.add_command(label='Exit', command=menu_win.destroy)
