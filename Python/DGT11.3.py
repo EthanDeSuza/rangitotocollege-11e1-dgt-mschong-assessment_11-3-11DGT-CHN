@@ -155,9 +155,8 @@ def wordle():  # Wordle game window
                                     fg='white', width=10, height=5)
                         box.grid(row=guesses+5, column=i+1)
                 guesses += 1
-                guess.destroy()
-                guess = Entry(interface_frame, width=9)
-                guess.grid(row=3, column=2, columnspan=3, padx=5)
+                # resets the entry box
+                guess.delete(0, END)
         if guesses > 5:  # ends game when they reach 6 guesses
             result = Label(interface_frame,
                            text="Out of guesses, the word was: "
@@ -652,7 +651,7 @@ def blackjack():
 
 def clicker():
     """Begins clicker game.
-    
+
     Starts the clicker game for the player to play.
     """
     clicker_win = Tk()
@@ -724,8 +723,8 @@ def clicker():
         clicker_struct = Label(clicker_structs,
                                text='You click the mine button to gain geo,'
                                '\nyou can buy upgrades with geo that can\n'
-                               'upgrade your geo per click, add autoclickers,\n'
-                               'upgrade their speed and amount per click.',
+                               'upgrade your geo per click, add autoclickers'
+                               ',\nupgrade their speed and amount per click.',
                                font=('Helvetica', 12))
         clicker_struct.grid(row=1, column=0)
     # a navbar and help menu at the top of window
@@ -771,10 +770,13 @@ def clicker():
     def upgrade_win():
         global geo, mult, upgrader, mult_upgrade, miner_hire, pick_cost
         global pick_enhance, lifeblood_enhance, lifeblood_cost, upgrader
+        def disable_close_bt():
+            return
+        upgrader.protocol('WM_DELETE_WINDOW', disable_close_bt)
         upgrader.destroy()
         upgrader = Tk()
-        upgrader.title('Upgrades')
-        upgrader.geometry('400x600')
+        #upgrader.overrideredirect(True)
+        upgrader.geometry('400x600+100+50')
         upgrader.resizable(False, False)
         upgrader.configure(bg='dark grey')
         titles = Label(upgrader, text='Upgrades',
@@ -785,28 +787,28 @@ def clicker():
                               f'\nCost: {mult_cost} Geo')
         mult_upgrade.grid(row=1, column=0, pady=10)
         amount = Label(upgrader, bg='dark grey',
-                       text=f'You have purchased this {mult-1} times')
+                       text=f'Amount owned:  {mult-1} times')
         amount.grid(row=2, column=0)
         miner_hire = Button(upgrader, command=miner_purchase,
                             text='Hire a husk miner'
                             f'\nCost: {miner_cost} Geo')
         miner_hire.grid(row=1, column=2, pady=10)
         amount = Label(upgrader, bg='dark grey',
-                       text=f'You have purchased this {miners} times.')
+                       text=f'Amount owned:  {miners} times.')
         amount.grid(row=2, column=2)
         pick_enhance = Button(upgrader, command=pick_upgrade,
                               text="Upgrade the husk miner's pickaxe"
                               f"\nCost: {pick_cost} Geo")
         pick_enhance.grid(row=3, column=0, pady=10)
         amount = Label(upgrader, bg='dark grey',
-                       text=f'You have purchased this {pick-1} times.')
+                       text=f'Amount owned:  {pick-1} times.')
         amount.grid(row=4, column=0)
         lifeblood_enhance = Button(upgrader, command=lifeblood_upgrade,
                                    text="Buy lifeblood for the husk miner"
                                    f"\nCost: {lifeblood_cost} Geo")
         lifeblood_enhance.grid(row=3, column=2, pady=10)
         amount = Label(upgrader, bg='dark grey',
-                       text=f'You have purchased this {counter} times.')
+                       text=f'Amount owned:  {counter} times.')
         amount.grid(row=4, column=2)
 
     def miner_purchase():  # Adds an autoclicker if you have enough geo
@@ -820,10 +822,11 @@ def clicker():
                          fg='black', bg='light grey')
             bank.grid(row=2, column=2)
             miner_hire = Button(upgrader, command=miner_purchase,
-                                text=f'Hire a husk miner\nCost: {miner_cost} Geo')
+                                text='Hire a husk miner'
+                                f'\nCost: {miner_cost} Geo')
             miner_hire.grid(row=1, column=2, pady=10)
             amount = Label(upgrader, bg='dark grey',
-                           text=f'You have purchased this {miners} times.')
+                           text=f'Amount owned:  {miners} times.')
             amount.grid(row=2, column=2)
 
     def lifeblood_upgrade():
@@ -840,11 +843,11 @@ def clicker():
                          text=f'Geo: {geo}', fg='black')
             bank.grid(row=2, column=2)
             lifeblood_enhance = Button(upgrader, command=lifeblood_upgrade,
-                                       text=f"Buy lifeblood for the husk miner"
+                                       text="Buy lifeblood for the husk miner"
                                        f"\nCost: {lifeblood_cost} Geo")
             lifeblood_enhance.grid(row=3, column=2, pady=10)
             amount = Label(upgrader, bg='dark grey',
-                           text=f'You have purchased this {counter} times.')
+                           text=f'Amount owned: {counter}')
             amount.grid(row=4, column=2)
 
     def pick_upgrade():
@@ -859,10 +862,11 @@ def clicker():
                          fg='black', bg='light grey')
             bank.grid(row=2, column=2)
             pick_enhance = Button(upgrader, command=pick_upgrade,
-                                  text=f"Upgrade the husk miner's pickaxe"
+                                  text="Upgrade the husk miner's pickaxe"
                                   f"\nCost: {pick_cost} Geo")
             pick_enhance.grid(row=3, column=0, pady=10)
-            amount = Label(upgrader, text=f'You have purchased this {pick-1} times.', bg='dark grey')
+            amount = Label(upgrader, text='Amount owned:'
+                           f' {pick-1}', bg='dark grey')
             amount.grid(row=4, column=0)
 
     def mult_upgradefunct():  # Increases the geo per click if you have enough geo
@@ -872,43 +876,58 @@ def clicker():
             mult += 1
             mult_cost = int(mult_cost * 1.5)
             bank.destroy()
-            bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
+            bank = Label(interface_frame, text=f'Geo: {geo}',
+                         fg='black', bg='light grey')
             bank.grid(row=2, column=2)
-            mult_upgrade = Button(upgrader, text=f'Increase Geo per click by 1\nCost: {mult_cost} Geo', command=mult_upgradefunct)
+            mult_upgrade = Button(upgrader, text='Increase Geo per click by 1'
+                                  f'\nCost: {mult_cost} Geo',
+                                  command=mult_upgradefunct)
             mult_upgrade.grid(row=1, column=0, pady=10)
-            amount = Label(upgrader, text=f'You have purchased this {mult-1} times', bg='dark grey')
+            amount = Label(upgrader, text=f'Amount owned: {mult-1}', bg='dark grey')
             amount.grid(row=2, column=0)
     # Opens and sets up game and upgrade window
-    geoclicker = Label(interface_frame, text='GeoClicker', bg='light grey', font=('Helvetica', 32))
+    geoclicker = Label(interface_frame, text='GeoClicker',
+                       bg='light grey', font=('Helvetica', 32))
     geoclicker.grid(row=0, column=0, columnspan=5, padx=50, pady=10)
-    mine_geo = Button(interface_frame, text='Mine Geo', width=10, height=5, font=('Helvetica', 12), command=mine)
+    mine_geo = Button(interface_frame, text='Mine Geo', command=mine,
+                      width=10, height=5, font=('Helvetica', 12))
     mine_geo.grid(row=5, column=2, pady=(100, 100))
-    upgrades = Button(interface_frame, text='Upgrades', width=20, height=2, command=upgrade_win)
+    upgrades = Button(interface_frame, text='Upgrades',
+                      width=20, height=2, command=upgrade_win)
     upgrades.grid(row=6, column=0, columnspan=5, pady=10)
     upgrader = Tk()
     upgrader.title('Upgrades')
-    upgrader.geometry('400x600')
+    upgrader.geometry('400x250')
     upgrader.resizable(False, False)
     upgrader.configure(bg='dark grey')
-    titles = Label(upgrader, text='Upgrades', font=('Helvetica', 24), bg='dark grey')
+    titles = Label(upgrader, text='Upgrades',
+                   font=('Helvetica', 24),bg='dark grey')
     titles.grid(row=0, column=0, columnspan=3, padx=130)
-    mult_upgrade = Button(upgrader, text=f'Increase Geo per click by 1\nCost: {mult_cost} Geo', command=mult_upgradefunct)
+    mult_upgrade = Button(upgrader, text='Increase Geo per click by 1'
+                          f'\nCost: {mult_cost} Geo',
+                          command=mult_upgradefunct)
     mult_upgrade.grid(row=1, column=0, pady=10)
-    amount = Label(upgrader, text=f'You have purchased this {mult-1} times', bg='dark grey')
+    amount = Label(upgrader, text=f'Amount owned: {mult-1}',bg='dark grey')
     amount.grid(row=2, column=0)
-    miner_hire = Button(upgrader, text=f'Hire a husk miner\nCost: {miner_cost} Geo', command=miner_purchase)
+    miner_hire = Button(upgrader, text='Hire a husk miner'
+                        f'\nCost: {miner_cost} Geo', command=miner_purchase)
     miner_hire.grid(row=1, column=2, pady=10)
-    amount = Label(upgrader, text=f'You have purchased this {miners} times.', bg='dark grey')
+    amount = Label(upgrader, text=f'Amount owned: {miners}', bg='dark grey')
     amount.grid(row=2, column=2)
-    pick_enhance = Button(upgrader, text=f"Upgrade the husk miner's pickaxe\nCost: {pick_cost} Geo", command=pick_upgrade)
+    pick_enhance = Button(upgrader, text="Upgrade the husk miner's pickaxe"
+                          f"\nCost: {pick_cost} Geo", command=pick_upgrade)
     pick_enhance.grid(row=3, column=0, pady=10)
-    amount = Label(upgrader, text=f'You have purchased this {pick-1} times.', bg='dark grey')
+    amount = Label(upgrader, text=f'Amount owned: {pick-1}', bg='dark grey')
     amount.grid(row=4, column=0)
-    lifeblood_enhance = Button(upgrader, text=f"Buy lifeblood for the husk miner\nCost: {lifeblood_cost} Geo", command=lifeblood_upgrade)
+    lifeblood_enhance = Button(upgrader, text="Buy lifeblood for the husk"
+                               f" miner\nCost: {lifeblood_cost} Geo",
+                               command=lifeblood_upgrade)
     lifeblood_enhance.grid(row=3, column=2, pady=10)
-    amount = Label(upgrader, text=f'You have purchased this {counter} times.', bg='dark grey')
+    amount = Label(upgrader, text=f'Amount owned:  {counter} times.',
+                   bg='dark grey')
     amount.grid(row=4, column=2)
-    bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
+    bank = Label(interface_frame, text=f'Geo: {geo}',
+                 fg='black',bg='light grey')
     bank.grid(row=2, column=2)
 
     def mine_auto():  # Starts the autoclicker working
@@ -917,7 +936,8 @@ def clicker():
             return
         geo += miners * pick
         bank.destroy()
-        bank = Label(interface_frame, text=f'Geo: {geo}', fg='black', bg='light grey')
+        bank = Label(interface_frame, text=f'Geo: {geo}',
+                     fg='black', bg='light grey')
         bank.grid(row=2, column=2)
         clicker_win.after(int(lifeblood), mine_auto)
         
@@ -932,53 +952,80 @@ def scoreboard_start():  # Scoreboard window
     root.geometry('600x500')
     root.configure(bg='dark grey')
     root.resizable(False, False)
-    title = Label(root, text='The leaderboard', font=('Helvetica', 32, 'bold'), bg='dark grey')
+    title = Label(root, text='The leaderboard',
+                  font=('Helvetica', 32, 'bold'), bg='dark grey')
     title.grid(row=0, column=0, columnspan=5, padx=(125))
-    wordle_scores = Label(root, text='Wordle Highscores', font=('Helvetica', 24, 'bold'), bg='dark grey')
+    wordle_scores = Label(root, text='Wordle Highscores',
+                          font=('Helvetica', 24, 'bold'), bg='dark grey')
     wordle_scores.grid(row=1, column=2)
-    wordlescore = Label(root, text=f"First place: {wordle_top3['first'][1]} with {wordle_top3['first'][0]} guesses", font=('Helvetica', 10, 'italic'), bg='dark grey')
+    wordlescore = Label(root, text=f"First place: {wordle_top3['first'][1]}"
+                        f" with {wordle_top3['first'][0]} guesses",
+                        font=('Helvetica', 10, 'italic'), bg='dark grey')
     wordlescore.grid(row=2, column=2)
-    wordlescore = Label(root, text=f"Second place: {wordle_top3['second'][1]} with {wordle_top3['second'][0]} guesses", font=('Helvetica', 10, 'italic'), bg='dark grey')
+    wordlescore = Label(root, text=f"Second place: {wordle_top3['second'][1]}"
+                        f" with {wordle_top3['second'][0]} guesses",
+                        font=('Helvetica', 10, 'italic'), bg='dark grey')
     wordlescore.grid(row=3, column=2)
-    wordlescore = Label(root, text=f"Third place: {wordle_top3['third'][1]} with {wordle_top3['third'][0]} guesses", font=('Helvetica', 10, 'italic'), bg='dark grey')
+    wordlescore = Label(root, text=f"Third place: {wordle_top3['third'][1]}"
+                        f" with {wordle_top3['third'][0]} guesses",
+                        font=('Helvetica', 10, 'italic'), bg='dark grey')
     wordlescore.grid(row=4, column=2)
-    blackjackscore = Label(root, text='Blackjack Highscores', font=('Helvetica', 24, 'bold'), bg='dark grey')
+    blackjackscore = Label(root, text='Blackjack Highscores', 
+                           font=('Helvetica', 24, 'bold'), bg='dark grey')
     blackjackscore.grid(row=5, column=2)
-    blackjackscore = Label(root, text=f"First place: {blackjack_top3['first'][1]} with {blackjack_top3['first'][0]} tiddlywinks", font=('Helvetica', 10, 'italic'), bg='dark grey')
+    blackjackscore = Label(root, text=f"First place: {blackjack_top3['first'][1]}"
+                           f" with {blackjack_top3['first'][0]} tiddlywinks",
+                           font=('Helvetica', 10, 'italic'), bg='dark grey')
     blackjackscore.grid(row=6, column=2)
-    blackjackscore = Label(root, text=f"Second place: {blackjack_top3['second'][1]} with {blackjack_top3['second'][0]} tiddlywinks", font=('Helvetica', 10, 'italic'), bg='dark grey')
+    blackjackscore = Label(root, text=f"Second place: {blackjack_top3['second'][1]}"
+                           f" with {blackjack_top3['second'][0]} tiddlywinks",
+                           font=('Helvetica', 10, 'italic'), bg='dark grey')
     blackjackscore.grid(row=7, column=2)
-    blackjackscore = Label(root, text=f"Third place: {blackjack_top3['third'][1]} with {blackjack_top3['third'][0]} tiddlywinks", font=('Helvetica', 10, 'italic'), bg='dark grey')
+    blackjackscore = Label(root, text=f"Third place: {blackjack_top3['third'][1]}"
+                           f" with {blackjack_top3['third'][0]} tiddlywinks",
+                           font=('Helvetica', 10, 'italic'), bg='dark grey')
     blackjackscore.grid(row=8, column=2)
-    clicker_scores = Label(root, text='Geoclicker Highscores', font=('Helvetica', 24, 'bold'), bg='dark grey')
+    clicker_scores = Label(root, text='Geoclicker Highscores',
+                           font=('Helvetica', 24, 'bold'), bg='dark grey')
     clicker_scores.grid(row=9, column=2)
-    clicker_scores = Label(root, text=f"First place: {clicker_top3['first'][1]} with {clicker_top3['first'][0]} Geo", font=('Helvetica', 10, 'italic'), bg='dark grey')
+    clicker_scores = Label(root, text=f"First place: {clicker_top3['first'][1]}"
+                           f" with {clicker_top3['first'][0]} Geo",
+                           font=('Helvetica', 10, 'italic'), bg='dark grey')
     clicker_scores.grid(row=10, column=2)
-    clicker_scores = Label(root, text=f"Second place: {clicker_top3['second'][1]} with {clicker_top3['second'][0]} Geo", font=('Helvetica', 10, 'italic'), bg='dark grey')
+    clicker_scores = Label(root, text=f"Second place: {clicker_top3['second'][1]}"
+                           f" with {clicker_top3['second'][0]} Geo",
+                           font=('Helvetica', 10, 'italic'), bg='dark grey')
     clicker_scores.grid(row=11, column=2)
-    clicker_scores = Label(root, text=f"Third place: {clicker_top3['third'][1]} with {clicker_top3['third'][0]} Geo", font=('Helvetica', 10, 'italic'), bg='dark grey')
+    clicker_scores = Label(root, text=f"Third place: {clicker_top3['third'][1]}"
+                           f" with {clicker_top3['third'][0]} Geo",
+                           font=('Helvetica', 10, 'italic'), bg='dark grey')
     clicker_scores.grid(row=12, column=2)
     root.mainloop()
-# This code creates a Tkinter window with a menu bar containing File and Help menus.
+
 
 def create_menu():
+    """Create menu.
+
+    This code creates a Tkinter window with a menu bar
+    containing File and Help menus.
+    """
     menu_win = Tk()
     menu_win.title(title)
-   
+
     def wordle_start():
         menu_win.destroy()
         wordle()
-   
+
     def clicker_start():
         menu_win.destroy()
         clicker()
-   
+
     def gamble_start():
         menu_win.destroy()
         blackjack()
-   
+
     def change_name():
-       
+
         def set_name():
             global username
             username = user.get()
@@ -991,7 +1038,9 @@ def create_menu():
                 error.title('Error')
                 error.geometry('250x100')
                 error.resizable(False, False)
-                Label(root, text="You must enter a name to begin!").grid(row=0, column=0, pady=20, padx=20)
+                Label(root, text="You must enter"
+                      " a name to begin!").grid(row=0, column=0,
+                                                pady=20, padx=20)
         menu_win.destroy()
         change = Tk()
         change.title('Change User')
@@ -1001,9 +1050,9 @@ def create_menu():
         text1.grid(row=0, column=0, pady=20, padx=20)
         user.grid(row=0, column=1, padx=20)
         submit.grid(row=1, columnspan=2)
-    #Specify window size
-    width=800
-    height=450
+    # Specify window size
+    width = 800
+    height = 450
     menu_win.geometry('{}x{}'.format(width, height))
     menu_win.configure(bg='dark grey')
     # create a quick frame
@@ -1026,37 +1075,64 @@ def create_menu():
     scoremenu = Menu(menu, tearoff=0)
     menu.add_cascade(label='Scoreboard', menu=scoremenu)
     scoremenu.add_command(label='Wordle Leaderboard')
-    scoremenu.add_command(label=f"First place: {wordle_top3['first'][1]} with {wordle_top3['first'][0]} guesses", font=('Helvetica', 10, 'italic'))
-    scoremenu.add_command(label=f"Second place: {wordle_top3['second'][1]} with {wordle_top3['second'][0]} guesses", font=('Helvetica', 10, 'italic'))
-    scoremenu.add_command(label=f"Third place: {wordle_top3['third'][1]} with {wordle_top3['third'][0]} guesses", font=('Helvetica', 10, 'italic'))
+    scoremenu.add_command(label=f"First place: {wordle_top3['first'][1]}"
+                          f" with {wordle_top3['first'][0]} guesses",
+                          font=('Helvetica', 10, 'italic'))
+    scoremenu.add_command(label=f"Second place: {wordle_top3['second'][1]}"
+                          f" with {wordle_top3['second'][0]} guesses",
+                          font=('Helvetica', 10, 'italic'))
+    scoremenu.add_command(label=f"Third place: {wordle_top3['third'][1]}"
+                          f" with {wordle_top3['third'][0]} guesses",
+                          font=('Helvetica', 10, 'italic'))
     scoremenu.add_separator()
     scoremenu.add_command(label='Blackjack Leaderboard')
-    scoremenu.add_command(label=f"First place: {blackjack_top3['first'][1]} with {blackjack_top3['first'][0]} tiddlywinks", font=('Helvetica', 10, 'italic'))
-    scoremenu.add_command(label=f"Second place: {blackjack_top3['second'][1]} with {blackjack_top3['second'][0]} tiddlywinks", font=('Helvetica', 10, 'italic'))
-    scoremenu.add_command(label=f"Third place: {blackjack_top3['third'][1]} with {blackjack_top3['third'][0]} tiddlywinks", font=('Helvetica', 10, 'italic'))
+    scoremenu.add_command(label=f"First place: {blackjack_top3['first'][1]}"
+                          f" with {blackjack_top3['first'][0]} tiddlywinks",
+                          font=('Helvetica', 10, 'italic'))
+    scoremenu.add_command(label=f"Second place: {blackjack_top3['second'][1]}"
+                          f" with {blackjack_top3['second'][0]} tiddlywinks",
+                          font=('Helvetica', 10, 'italic'))
+    scoremenu.add_command(label=f"Third place: {blackjack_top3['third'][1]}"
+                          f" with {blackjack_top3['third'][0]} tiddlywinks",
+                          font=('Helvetica', 10, 'italic'))
     scoremenu.add_separator()
     scoremenu.add_command(label='Geoclicker Leaderboard')
-    scoremenu.add_command(label=f"First place: {clicker_top3['first'][1]} with {clicker_top3['first'][0]} Geo", font=('Helvetica', 10, 'italic'))
-    scoremenu.add_command(label=f"Second place: {clicker_top3['second'][1]} with {clicker_top3['second'][0]} Geo", font=('Helvetica', 10, 'italic'))
-    scoremenu.add_command(label=f"Third place: {clicker_top3['third'][1]} with {clicker_top3['third'][0]} Geo", font=('Helvetica', 10, 'italic'))
-    title_label = Label(menu_frame, text=f"Hello {username}! Welcome to \n{title}", font=('Helvetica', 32, 'bold'), bg='dark grey')
+    scoremenu.add_command(label=f"First place: {clicker_top3['first'][1]}"
+                          f" with {clicker_top3['first'][0]} Geo",
+                          font=('Helvetica', 10, 'italic'))
+    scoremenu.add_command(label=f"Second place: {clicker_top3['second'][1]}"
+                          f" with {clicker_top3['second'][0]} Geo",
+                          font=('Helvetica', 10, 'italic'))
+    scoremenu.add_command(label=f"Third place: {clicker_top3['third'][1]}"
+                          f" with {clicker_top3['third'][0]} Geo",
+                          font=('Helvetica', 10, 'italic'))
+    title_label = Label(menu_frame,  bg='dark grey',
+                        text=f"Hello {username}! Welcome to \n{title}",
+                        font=('Helvetica', 32, 'bold'))
     title_label.grid(row=0, column=0, columnspan=3)
     # button for each of the game windows
-    buttonw = Button(menu_frame, text='Play Wordle', width=button_width, height=button_height, command=wordle_start)
-    buttonb = Button(menu_frame, text='Play BlackJack', width=button_width, height=button_height, command=gamble_start)
-    buttons = Button(menu_frame, text='Play Geoclicker', width=button_width, height=button_height, command=clicker_start)
-    buttonw.grid(row=1, column=0, pady=50, padx=(0,20))
+    buttonw = Button(menu_frame, text='Play Wordle', command=wordle_start,
+                     width=button_width, height=button_height)
+    buttonb = Button(menu_frame, text='Play BlackJack', command=gamble_start,
+                     width=button_width, height=button_height)
+    buttons = Button(menu_frame, text='Play Geoclicker', command=clicker_start,
+                     width=button_width, height=button_height)
+    buttonw.grid(row=1, column=0, pady=50, padx=(0, 20))
     buttonb.grid(row=1, column=1, pady=50, padx=20)
-    buttons.grid(row=1, column=2, pady=50, padx=(20,0))
+    buttons.grid(row=1, column=2, pady=50, padx=(20, 0))
     menu_win.mainloop()
 
 # progressing the progress bar
 
+
 def start_progress():
-    # create the random amount of progress
+    """Progress loading.
+
+    Creates the random amount of progress.
+    """
     loading = random.randint(1, 10)
     # Create a progressbar widget
-    if pg['value']< 100:
+    if pg['value'] < 100:
         pg['value'] += loading
         root.after(50, start_progress)
     else:
@@ -1064,7 +1140,12 @@ def start_progress():
         create_menu()
 # check for name entered
 
+
 def start_loading():
+    """Start loading.
+
+    Starts the loading process when button is pressed.
+    """
     global username
     username = user.get()
     if len(username) > 0:
@@ -1074,14 +1155,20 @@ def start_loading():
         root.title('Error')
         root.geometry('250x100')
         root.resizable(False, False)
-        Label(root, text="You must enter a name to begin!").grid(row=0, column=0, pady=20, padx=20)
+        Label(root, text="You must enter a name to"
+              " begin!").grid(row=0, column=0, pady=20, padx=20)
+
+
 # Sets up some global variables for the wordle game
 guesses = 0
 guess = ''
 correct_word = ''
-wordle_top3 = {'first':[6, 'Computer'], 'second':[6, 'Computer'], 'third':[6, 'Computer']}
-blackjack_top3 = {'first':[0, 'Computer'], 'second':[0, 'Computer'], 'third':[0, 'Computer']}
-clicker_top3 = {'first':[0, 'Computer'], 'second':[0, 'Computer'], 'third':[0, 'Computer']}
+wordle_top3 = {'first': [6, 'Computer'], 'second': [6, 'Computer'],
+               'third': [6, 'Computer']}
+blackjack_top3 = {'first': [0, 'Computer'], 'second': [0, 'Computer'],
+                  'third': [0, 'Computer']}
+clicker_top3 = {'first': [0, 'Computer'], 'second': [0, 'Computer'],
+                'third': [0, 'Computer']}
 # Sets up widths and heights for some buttons
 button_width = 20
 button_height = 5
@@ -1089,23 +1176,27 @@ button_height = 5
 root = Tk()
 title = 'The Great Games Compendium'
 root.title(title)
-#Specify window size
-width=800
-height=450
+root.configure(bg='light grey')
+# Specify window size
+width = 800
+height = 450
 root.geometry('{}x{}'.format(width, height))
 # create a quick frame
-frame = Frame(root)
+frame = Frame(root, bg='light grey')
 frame.pack(pady=20)
 # setup frame grid
 label = Label(frame, text=title, font=('Helvetica', 24))
 # Loading screen
-pg =  Progressbar(frame, orient="horizontal", length=500, mode="determinate")
+pg = Progressbar(frame, orient="horizontal", length=500,
+                 mode="determinate")
 pg.grid(row=2, column=1, columnspan=2)
 # Enter in username
-Label(frame, text="Enter username:").grid(row=0, column=1, columnspan=2, pady=(50, 0))
+Label(frame, text="Enter username:", bg='light grey').grid(row=0, column=1,
+                                          columnspan=2, pady=(50, 0))
 user = Entry(frame)
 user.grid(row=1, column=1, columnspan=2, pady=(5, 25))
 # button that checks for username and starts loading it if present
-start_button = Button(frame, text="Start game", width = button_width, height = button_height, command=start_loading)
+start_button = Button(frame, text="Start game", width=button_width,
+                      height=button_height, command=start_loading)
 start_button.grid(row=3, column=1, columnspan=2, pady=50)
 root.mainloop()
