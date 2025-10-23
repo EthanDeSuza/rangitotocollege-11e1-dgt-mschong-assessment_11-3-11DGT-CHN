@@ -161,7 +161,7 @@ def wordle():  # Wordle game window
                         box.grid(row=guesses+5, column=i+1)
                 guesses += 1
                 # Increases window size to fit new row of guesses
-                height += 100
+                height += 60
                 screen_height = wordle_win.winfo_screenheight() # Height of the screen
                 # Calculate Starting Y coordinates for Window
                 y = (screen_height/2) - (height/2)
