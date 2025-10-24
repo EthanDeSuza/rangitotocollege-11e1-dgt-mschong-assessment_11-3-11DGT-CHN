@@ -16,6 +16,7 @@ def wordle():  # Wordle game window
     Runs the wordle game and displayes it to the user.
     """
     # Starts window and defines the title
+    global width, x
     wordle_win = Tk()
     title = 'Wordle'
     wordle_win.title(title)
@@ -23,7 +24,7 @@ def wordle():  # Wordle game window
     width = 400
     height = 500
     screen_width = wordle_win.winfo_screenwidth()  # Width of the screen
-    screen_height = wordle_win.winfo_screenheight() # Height of the screen
+    screen_height = wordle_win.winfo_screenheight()  # Height of the screen
     # Calculate Starting X and Y coordinates for Window
     x = (screen_width/2) - (width/2)
     y = (screen_height/2) - (height/2)
@@ -90,7 +91,7 @@ def wordle():  # Wordle game window
         Compares word given with correct answer to return which letters
         are correct.
         """
-        global guesses, guess, result, height, x  # Grabs the variables
+        global guesses, guess, result, width, height, x  # Grabs the variables
         if guesses <= 5:  # Limits the players guesses to 6
             if guess.get().lower() == correct_word:  # Check word with correct
                 result.destroy()
