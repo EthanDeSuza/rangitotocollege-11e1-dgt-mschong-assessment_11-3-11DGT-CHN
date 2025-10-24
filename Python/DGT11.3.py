@@ -65,8 +65,9 @@ def wordle():  # Wordle game window
         wordle_struct = Label(wordle_structs, text='To play wordle you '
                               'guess a five letter word,\nthen when you '
                               'press the guess button you will be show\n'
-                              'which of your letters are incorrect, '
-                              'in the wrong place\nor correct.',
+                              'which of your letters are incorrect(grey), '
+                              'in the wrong place(yellow)'
+                              '\nor correct(green).',
                               font=('Helvetica', 12))
         wordle_struct.grid(row=1, column=0)
     # a navbar and help menu at the top of window
